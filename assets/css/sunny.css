@@ -22,8 +22,13 @@ form input {
   outline: none;
   font-family: courier new;
   font-size: 4vw;
-  text-align: center;
   color: white;
+}
+
+.resizing-input span {
+  display: none;
+  font-family: courier new;
+  font-size: 4vw;
 }
 
 nobr {

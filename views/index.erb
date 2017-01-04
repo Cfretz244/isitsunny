@@ -11,15 +11,34 @@
       <h1 style="display: inline-block">It is <i>Always</i> Sunny</h1>
     </div>
 
-    <div style="text-align: center">
+    <div class="resizing-input" style="text-align: center">
       <form id="when" action="/" method="POST">
-        <input type="text" id="time" name="time" maxlength="8" size="8" value="<%= @time unless @time.nil? || @time.strip.empty? %>" />
-        <nobr>&nbsp;on a</nobr>
-        <input type="text" id="day" name="day" maxlength="9" size="9" value="<%= @day unless @day.nil? || @day.strip.empty? %>" />
+        <input
+          type="text"
+          id="time"
+          name="time"
+          maxlength="8"
+          size="8"
+          autocomplete="off"
+          value="<%= @time unless @time.nil? || @time.strip.empty? %>"
+        />
+        <span></span>
+        <nobr>&nbsp;on a&nbsp;</nobr>
+        <input
+          type="text"
+          id="day"
+          name="day"
+          maxlength="9"
+          size="9"
+          autocomplete="off"
+          value="<%= @day unless @day.nil? || @day.strip.empty? %>"
+        />
+        <span></span>
       </form>
     </div>
   </body>
 
   <script src="/js/jquery-3.1.1.min.js"></script>
   <script src="/js/setup.js"></script>
+  <script src="/js/balance.js"></script>
 </html>
