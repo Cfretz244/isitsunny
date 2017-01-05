@@ -101,14 +101,31 @@ class Sunny < Sinatra::Application
 
     # Create a time diff string.
     @diff_str = String.new
-    diff = (@closest.offset - stamp).abs
+    diff = (stamp - @closest.offset).abs
+
+    # Decide if this already happened.
+    @diff_str += @closest.offset >= stamp ? 'Happens' : 'Happened'
+
+    # Add in the hour component, if one exists.
     hours = diff / 3_600
-    @diff_str += "#{hours} hour(s) " if hours > 0
+    @diff_str += " #{'in ' if @closest.offset > stamp}#{hours} hour#{'s' if hours > 1}" if hours > 0
     diff -= hours * 3_600
+
+    # Add in the minute component, if one exists.
     minutes = diff / 60
-    @diff_str += 'and ' if hours > 0
-    @diff_str += "#{minutes} minute(s) " if minutes > 0
-    @diff_str[-1] = '.'
+    if hours > 0 && minutes > 0
+      @diff_str += ' and'
+    elsif minutes > 0 && @closest.offset > stamp
+      @diff_str += ' in'
+    end
+    @diff_str += " #{minutes} minute#{'s' if minutes > 1}" if minutes > 0
+
+    # Fall back to "now" if no other alternative.
+    if hours > 0 || minutes > 0
+      @diff_str += "#{' ago' if @closest.offset < stamp}."
+    else
+      @diff_str += ' now.'
+    end
 
     erb :index
   end

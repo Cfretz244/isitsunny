@@ -42,7 +42,7 @@
     <div id="recommendation" style="text-align: center">
       <% unless @closest.nil? %>
         <h2>"<%= @closest.title %>"</h2>
-        <p>Happens in <%= @diff_str %></p>
+        <p><%= @diff_str %></p>
       <% end %>
     </div>
   </body>
