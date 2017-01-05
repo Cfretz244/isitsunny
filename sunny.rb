@@ -72,7 +72,6 @@ class Sunny < Sinatra::Application
 
   # Setup the base route.
   get '/' do
-    @upload = true
     erb :index
   end
 
@@ -98,9 +97,19 @@ class Sunny < Sinatra::Application
     end
 
     # Find the episodes that are closest to the given time.
-    @closest = @episodes.sort_by { |ep| (stamp - ep.offset).abs }
+    @closest = @episodes.sort_by { |ep| (stamp - ep.offset).abs }.first
 
-    @upload = false
+    # Create a time diff string.
+    @diff_str = String.new
+    diff = (@closest.offset - stamp).abs
+    hours = diff / 3_600
+    @diff_str += "#{hours} hour(s) " if hours > 0
+    diff -= hours * 3_600
+    minutes = diff / 60
+    @diff_str += 'and ' if hours > 0
+    @diff_str += "#{minutes} minute(s) " if minutes > 0
+    @diff_str[-1] = '.'
+
     erb :index
   end
 

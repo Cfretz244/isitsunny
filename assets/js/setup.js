@@ -38,5 +38,5 @@ $(function () {
 
   // Setup an event listener to automatically update state whenever a change is
   // detected.
-  $('#when').on('change', updateRecommendation);
+  $(document).on('change', '#when', updateRecommendation);
 });

@@ -39,9 +39,10 @@
         <input type="hidden" id="actualDay" name="actualDay">
       </form>
     </div>
-    <div id="recommendation">
+    <div id="recommendation" style="text-align: center">
       <% unless @closest.nil? %>
-        <p style="color: white"><%= @closest.first.title %></p>
+        <h2>"<%= @closest.title %>"</h2>
+        <p>Happens in <%= @diff_str %></p>
       <% end %>
     </div>
   </body>
