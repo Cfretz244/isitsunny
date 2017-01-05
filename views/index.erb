@@ -17,10 +17,10 @@
           type="text"
           id="time"
           name="time"
-          maxlength="8"
-          size="8"
+          maxlength="12"
+          size="12"
           autocomplete="off"
-          value="<%= @time unless @time.nil? || @time.strip.empty? %>"
+          value="<%= @provided_time unless @provided_time.nil? || @provided_time.strip.empty? %>"
         />
         <span></span>
         <nobr>&nbsp;on a&nbsp;</nobr>
@@ -28,13 +28,21 @@
           type="text"
           id="day"
           name="day"
-          maxlength="9"
-          size="9"
+          maxlength="12"
+          size="12"
           autocomplete="off"
-          value="<%= @day unless @day.nil? || @day.strip.empty? %>"
+          value="<%= @provided_day unless @provided_day.nil? || @provided_day.strip.empty? %>"
         />
         <span></span>
+
+        <input type="hidden" id="actualTime" name="actualTime">
+        <input type="hidden" id="actualDay" name="actualDay">
       </form>
+    </div>
+    <div id="recommendation">
+      <% unless @closest.nil? %>
+        <p style="color: white"><%= @closest.first.title %></p>
+      <% end %>
     </div>
   </body>
 

@@ -3,6 +3,7 @@ $ROOT = File.expand_path(File.dirname(__FILE__))
 $:.unshift($ROOT)
 
 require 'thin'
+require 'time'
 require 'byebug'
 require 'sinatra'
 
@@ -40,23 +41,27 @@ class Sunny < Sinatra::Application
 
       # Break the line up into individual columns.
       entry = line.chomp.split(',')
-      @episodes.push(Episode.new(entry[1], entry[2], entry[3], ground(entry[4], entry[5])))
+      next if entry.compact.size != 6
+      @episodes.push(Episode.new(entry[1], entry[2], entry[3], ground("#{entry[4]} #{entry[5]}")))
     end
+    puts @episodes.inspect
   end
 
-  def ground(time, day)
+  def ground(date)
     # Use a special value for unknown episodes.
-    return -1 if time.nil? || day.nil? || time.empty? || day.empty?
+    return -1 if date.strip.empty?
+
+    # Attempt to parse the date.
+    parsed = DateTime.parse(date)
 
     # Calculate the day offset.
-    base = DAY_OFFSET[day.downcase] * 86_400
+    base = parsed.wday * 86_400
 
     # Calculate the hour offset.
-    split = time.index(':')
-    hour = time[0...split].to_i * 3_600
+    hour = parsed.hour * 3_600
 
     # Calculate the minute offset.
-    minute = time[(split + 1)..-1].to_i * 60
+    minute = parsed.minute * 60
 
     # Return the final value.
     base + hour + minute
@@ -67,13 +72,35 @@ class Sunny < Sinatra::Application
 
   # Setup the base route.
   get '/' do
+    @upload = true
     erb :index
   end
 
   post '/' do
-    # Grab the parameters in case they were set.
-    @day = params[:day]
-    @time = params[:time]
+    # Set user defined parameters for the template if they were provided.
+    @provided_day = params[:day]
+    @provided_time = params[:time]
+
+    # Get a definite values to work with.
+    effective_day = !@provided_day.empty? && @provided_day || params[:actualDay]
+    effective_time = !@provided_time.empty? && @provided_time || params[:actualTime]
+
+    # Construct a string to attempt to parse.
+    final_date = "#{effective_time} #{effective_day}"
+
+    # Attempt to parse the date and ground it to an abstract week.
+    stamp = ground(final_date)
+
+    # Put something fun on the screen if the user provided garbage.
+    if stamp < 0
+      @provided_day = '???'
+      @provided_time = '???'
+    end
+
+    # Find the episodes that are closest to the given time.
+    @closest = @episodes.sort_by { |ep| (stamp - ep.offset).abs }
+
+    @upload = false
     erb :index
   end
 
