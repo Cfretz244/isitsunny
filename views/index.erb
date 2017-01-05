@@ -40,8 +40,8 @@
       </form>
     </div>
     <div id="recommendation" style="text-align: center">
-      <% unless @closest.nil? %>
-        <h2>"<%= @closest.title %>"</h2>
+      <% unless @match.nil? %>
+        <h2>"<%= @match.title %>"</h2>
         <p><%= @diff_str %></p>
       <% end %>
     </div>

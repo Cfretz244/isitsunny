@@ -70,6 +70,33 @@ class Sunny < Sinatra::Application
     -1
   end
 
+  def time_string(timestamp, closest)
+    # Start string generation.
+    diff_str = String.new
+    diff = (timestamp - closest.offset).abs
+
+    # Decide if this already happened.
+    diff_str += closest.offset >= timestamp ? 'Happens' : 'Happened'
+
+    # Add in the hour component, if one exists.
+    hours = diff / 3_600
+    diff_str += " #{'in ' if closest.offset > timestamp}#{hours} hour#{'s' if hours > 1}" if hours > 0
+    diff -= hours * 3_600
+
+    # Add in the minute component, if one exists.
+    minutes = diff / 60
+    if hours > 0 && minutes > 0
+      diff_str += ' and'
+    elsif minutes > 0 && closest.offset > timestamp
+      diff_str += ' in'
+    end
+    diff_str += " #{minutes} minute#{'s' if minutes > 1}" if minutes > 0
+
+    # Punctuate the message and insert "ago" if this is in the past, or fallback to "now" if
+    # no other alternative.
+    diff_str += hours > 0 || minutes > 0 ? "#{' ago' if closest.offset < timestamp}" : ' now.'
+  end
+
   # Setup the base route.
   get '/' do
     erb :index
@@ -97,35 +124,12 @@ class Sunny < Sinatra::Application
     end
 
     # Find the episodes that are closest to the given time.
-    @closest = @episodes.sort_by { |ep| (stamp - ep.offset).abs }.first
+    closest = @episodes.sort_by { |ep| (stamp - ep.offset).abs }
+    closest.shift until closest.first.offset >= 0 unless stamp < 0
+    @match = closest.first
 
     # Create a time diff string.
-    @diff_str = String.new
-    diff = (stamp - @closest.offset).abs
-
-    # Decide if this already happened.
-    @diff_str += @closest.offset >= stamp ? 'Happens' : 'Happened'
-
-    # Add in the hour component, if one exists.
-    hours = diff / 3_600
-    @diff_str += " #{'in ' if @closest.offset > stamp}#{hours} hour#{'s' if hours > 1}" if hours > 0
-    diff -= hours * 3_600
-
-    # Add in the minute component, if one exists.
-    minutes = diff / 60
-    if hours > 0 && minutes > 0
-      @diff_str += ' and'
-    elsif minutes > 0 && @closest.offset > stamp
-      @diff_str += ' in'
-    end
-    @diff_str += " #{minutes} minute#{'s' if minutes > 1}" if minutes > 0
-
-    # Fall back to "now" if no other alternative.
-    if hours > 0 || minutes > 0
-      @diff_str += "#{' ago' if @closest.offset < stamp}."
-    else
-      @diff_str += ' now.'
-    end
+    @diff_str = time_string(stamp, @match)
 
     erb :index
   end
