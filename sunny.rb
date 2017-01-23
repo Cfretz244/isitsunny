@@ -18,17 +18,6 @@ class Sunny < Sinatra::Application
   # Setup an episode class to store csv information.
   Episode = Struct.new(:season, :num, :title, :offset)
 
-  # Numbers for days of the week.
-  DAY_OFFSET = {
-    'sunday' => 0,
-    'monday' => 1,
-    'tuesday' => 2,
-    'wednesday' => 3,
-    'thursday' => 4,
-    'friday' => 5,
-    'saturday' => 6
-  }
-
   def initialize(*args)
     # Properly initialize ourselves.
     super
@@ -44,7 +33,6 @@ class Sunny < Sinatra::Application
       next if entry.compact.size != 6
       @episodes.push(Episode.new(entry[1], entry[2], entry[3], ground("#{entry[4]} #{entry[5]}")))
     end
-    puts @episodes.inspect
   end
 
   def ground(date)
