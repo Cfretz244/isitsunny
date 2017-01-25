@@ -3,8 +3,8 @@ $(function () {
   // Set the current time every 5 seconds.
   var dateUpdate = function () {
     var date = new Date();
-    var day = date.toLocaleTimeString([], {weekday: "long"});
-    var time = date.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+    var day = date.toLocaleTimeString('en-US', {weekday: "long"});
+    var time = date.toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit'});
 
     // Set the placeholder values for the input fields.
     day = day.substring(0, day.indexOf(' '));

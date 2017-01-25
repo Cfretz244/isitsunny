@@ -24,7 +24,7 @@ class Sunny < Sinatra::Application
 
     # Iterate across all lines in the CSV.
     @episodes = Array.new
-    File.foreach(File.join($ROOT, 'episodes.csv')).with_index do |line, index|
+    File.foreach(File.join($ROOT, 'isitsunny', 'Data.csv')).with_index do |line, index|
       # Skip the headers.
       next if index == 0
 
