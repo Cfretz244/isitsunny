@@ -42,6 +42,7 @@
     <div id="recommendation" style="text-align: center">
       <% unless @match.nil? %>
         <h2>"<%= @match.title %>"</h2>
+        <p style="font-size: 2vw">Season <%= @match.season %> Episode <%= @match.num %></p>
         <p><%= @diff_str %></p>
       <% end %>
     </div>

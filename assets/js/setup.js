@@ -26,8 +26,10 @@ $(function () {
       // Drop it in and hope no one notices.
       var form = parsed.siblings('.resizing-input');
       var output = parsed.siblings('#recommendation');
+      var listing = parsed.siblings('#listing')
       $('.resizing-input').replaceWith(form);
       $('#recommendation').replaceWith(output);
+      $('#listing').replaceWith(listing);
 
       // Force the page to update.
       dateUpdate();
