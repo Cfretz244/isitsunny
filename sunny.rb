@@ -82,7 +82,7 @@ class Sunny < Sinatra::Application
 
     # Punctuate the message and insert "ago" if this is in the past, or fallback to "now" if
     # no other alternative.
-    diff_str += hours > 0 || minutes > 0 ? "#{' ago' if closest.offset < timestamp}" : ' now.'
+    diff_str += hours > 0 || minutes > 0 ? "#{' ago' if closest.offset < timestamp}" : ' now!'
   end
 
   # Setup the base route.
