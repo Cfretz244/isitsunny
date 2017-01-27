@@ -30,7 +30,7 @@ class Sunny < Sinatra::Application
 
       # Break the line up into individual columns.
       entry = line.chomp.split(',')
-      next if entry.compact.size != 6
+      next if entry.compact.size != 7
       @episodes.push(Episode.new(entry[1], entry[2], entry[3], ground("#{entry[4]} #{entry[5]}")))
     end
   end
